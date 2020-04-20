@@ -24,10 +24,10 @@
 		reg = <0x0 0x40000000>;
 	};
 
-	uio_fpga_base@43C10000{
-		status = "okay";
-		compatible = "generic-uio";
-		reg = < 0x43C10000 0x1000 >;
+	uio_fpga_base@43C10000{				#Node name
+		status = "okay";				#This device shall be used (not disable)
+		compatible = "generic-uio";		#Generic UIO driver shall handle this device
+		reg = < 0x43C10000 0x1000 >;	#Address range
 	};
 
 };
