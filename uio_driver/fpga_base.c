@@ -41,7 +41,7 @@ static struct uio_info info = {
 //Information for registering our driver
 static struct platform_device my_dev = {
 	.name = "uio_pdrv_genirq",	//Name of the general uio driver 
-	.id = -1,
+	.id = 1,					//uioX (number of the uio)
 	.dev = {
 		.platform_data = &info,
 	},

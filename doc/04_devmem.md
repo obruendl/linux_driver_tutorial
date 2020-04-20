@@ -1,98 +1,57 @@
-[<< back](02_introduction.md) | index](01_index.md) | [forward >> ](04_uio_driver.md)
+[<< back](03_setup.md) | [index](01_index.md) | [forward >> ](05_uio_driver.md)
 
-# Setup
+# devmem
 
-## 1. Get the Reference Desgin
+## Overview
 
-First of all, the reference design of the target HW has to be downloaded from the *Enclustra Download Page [3]*. In our case, this is the *[Mercury ZX5 Reference Design for Mercury PE1 V4](https://download.enclustra.com/public_files/SoC_Modules/Mercury_ZX5/Mercury_ZX5_Reference_Design_for_Mercury_PE1_V4.zip) [4]*. Download the zip and extract it somewhere to your hard-drive.
+We now have a bitstream we assume to get loaded during the boot process. However, we should prove that the bitstream is really loaded and that we can access our peripheral before we go writing drivers for it. To do this, *devmem* can be used.
 
-## 2. Reference Design Setup
+## 1. Finding out about the IP-Core
 
-The reference design downloaded in step 1 contains a good description about how to set-up the hardware, what tools are required and how to build the reference design. I suggest you follow these steps to ensure you can successfully build the reference design on your machine.
+First of all, we need to know how the register bank of the IP-Core looks. Otherwise we cannot have any expectations of how to interact with it. 
 
-## 3. Enclustra Linux Build Environment
+To find out about the register bank of the IP-Core, open the document [[root]/lib/VivadoIp/vivadoIP_fpga_base/doc/fpga_base.pdf](../lib/VivadoIp/vivadoIP_fpga_base/doc/fpga_base.pdf) and jump to page 5.
 
-Follow the [Enclustra Build Environment - HowTo Guide](https://download.enclustra.com/public_files/Design_Support/Application%20Notes/Enclustra_Build_Environment_HowToGuide_V02.pdf) to generate a bootable Linux and test it. This is where we start from (the tutorial does not cover the process of building a bootable Linux).
+![regbank.png](04_pics/regbank.png)
 
-Note that the tutorial assumes you are booting from SD card. You can choose other boot mechanisms but the descriptions will not fit one-to-one in this case.
+Okay, so we expect to read the version configured in the Vivado GUI (in our case 0xAB12CD34) from address 0x00. Then we expect to read the FW build date. 
 
-## 4. Add the *fpga_base* IP-Core
+The SW build date may be a bit confusting. How can the FW know about this? Actually these are just read/write registers. They are meant to be set by the processor of an embedded system and to be read by the control system. In our case, we can just see them as read/write registers.
 
-First, add the path containing the IP-core (*[repoRoot]/lib/VivadoIp*) to the IP search path of the reference design Vivado project. 
+## 2. Find out about devmem
 
-![ip_repo.png](03_pics/ip_repo.png)
+To find out about the devmem command, type *devmem -help* on the shell of your target Linux.
 
+![devmem_help.png](04_pics/devmem_help.png)
 
+## 3. Read Registers
 
-Now follow the steps below:
+Now you can read the version and FW date registers using devmem. Note that the offset of the IP-Core address (0x43C10000) has to be taken into account.
 
-1. Open the block design (click on *Open Block Design*)
-2. Right-click into the block design
-3. Select *Add IP* from the context menu
-4. Type *fpga_base* and select the *fpga_Base_1_4* IP-Core
-5. The new IP-Corere should now be visible in the block design.
+![read_reg.png](04_pics/read_reg.png)
 
+We can see the expected version. The build year/month also seem to be correct. I built the design in April 2020. So month number 4 and Year 0x7E4=2020 are correct.
 
+## 4. Write Registers
 
-Now doubble-click on the new IP-core and configure it as shown in the picture below.
+For the registers that must be written by SW, we still read zero of course, because they were not written at any point.
 
-![ip_settings.png](03_pics/ip_settings.png)
-
-
-
-Now integrate the IP-Core into the design:
-
-1. Add an additional master port to the AXI Interconnect
-2. Connect the *fpga_base* IP core to the AXI interconnect
-3. Connect clock and reset of *fpga_base*
-4. Connect clock and reset of the new AXI Interconnect port
+![wreg_zero.png](04_pics/wreg_zero.png)
 
 
 
-The block design should now look like this:
+Let's try writing and reading them back:
 
-![bd.png](03_pics/bd.png)
+![wreg_wr.png](04_pics/wreg_wr.png)
 
-
-
-Now assign the address *0x43C10000* to the new IP-Core. You could use any other address but all examples will contain this address.
-
-![address.png](03_pics/address.png)
+Okay, this seems to work. We read back the value we wrote.
 
 
 
-You can now generate a new bitstream by clicking on *Generate Bitstream*
+## 5. Conclusion
 
-## 5. Add the new Bitstream to Linux Boot
-
-To make Linux booting the new bitstream, follow the steps below:
-
-1. Open Xilinx SDK
-2. Click on *Xilinx > Create Boot Image*
-3. Select *Importexisting BIF file*
-4. From the *Browse* buttopn next to the *Import BIF file path*, select the .bif file that was generated by Enclustra Build Environment together with the other files to be placed in the boot partition.
-5. After following these steps, the dialog should roughly look as shown below
-
-![create_boot_image.png](03_pics/create_boot_image.png)
+The IP core we added to the design is accessible and it works as expected. Hence, we can now continue writing a driver for the IP-Core.
 
 
 
-Now click on the *fpga.bit* partition of the boot image and select *Edit*. Choose the .bit file generated by Vivado  (see figure below for the default path of the file) and press OK.
-
-![new_bit.png](03_pics/new_bit.png)
-
-
-
-Now press the *Create Image* button in the boot image dialog and accept overwriting existing files. 
-
-
-
-## 6. Copy files to SD-Card
-
-Now copy the new *boot.bif* and *boot.bin* files to the boot partition of your SD card and check if it still boots.
-
-At that point we have a new peripheral in the PL but we cannot access it.
-
-
-
-[<< back](02_introduction.md) | index](01_index.md) | [forward >> ](04_uio_driver.md)
+[<< back](03_setup.md) | [index](01_index.md) | [forward >> ](05_uio_driver.md)

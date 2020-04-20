@@ -36,13 +36,19 @@ The device-tree can then be compiled into a devicetree-blob using the command be
 dtc -O dtb -o zx5-obru-uio.dtb zx5-obru-uio.dts
 </pre>
 
-The output file *zx5-obru-uio.dts* must be copied to the boot partition of the SD card and renamed to *devicetree.dtb* (as expected by the boot process).
+The output file *zx5-obru-uio.dts* must be copied to the boot partition of the SD card and renamed to *devicetree.dtb* (as expected by the boot process) and hence replace de default *devicetree.dtb* file.
 
 ## 4. Write Kernel Module
 
-Bla, bla, bla
+A very small kernel module is required. It is only there to let the generic UIO driver know about the properties of the device (base address, interrupt number, etc.). 
 
-## 5. Load Kernel Module
+The very basic code for this kernel module can be found in [[root]/uio_driver/fpga_base.c](../uio_driver/fpga_base.c). Note that the current version of the example code does not contain any interrupt support yet.
+
+## 5. Compile Kernel Module
+
+
+
+## Load Kernel Module
 
 Bla, bla, bla
 
