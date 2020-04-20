@@ -4,7 +4,7 @@
 
 ## 1. Get the Reference Desgin
 
-First of all, the reference design of the target HW has to be downloaded from the *Enclustra Download Page [3]*. In our case, this is the *[Mercury ZX5 Reference Design for Mercury PE1 V4](https://download.enclustra.com/public_files/SoC_Modules/Mercury_ZX5/Mercury_ZX5_Reference_Design_for_Mercury_PE1_V4.zip) [4]*. Download the zip and extract it somewhere to your hard-drive.
+First of all, the reference design of the target HW has to be downloaded from the *[Enclustra Download Page](https://download.enclustra.com/) [3]*. In our case, this is the *[Mercury ZX5 Reference Design for Mercury PE1 V4](https://download.enclustra.com/public_files/SoC_Modules/Mercury_ZX5/Mercury_ZX5_Reference_Design_for_Mercury_PE1_V4.zip) [4]*. Download the zip and extract it somewhere to your hard-drive.
 
 ## 2. Reference Design Setup
 
@@ -55,8 +55,7 @@ The block design should now look like this:
 
 
 
-Now assign the address *0x43C10000* to the new IP-Core. You could use any other address but all examples will contain this address.
-
+Now assign the address *0x43C10000* to the new IP-Core. You could use any other address but all examples will assume this address, so it's recommended to keep this address.
 ![address.png](03_pics/address.png)
 
 
