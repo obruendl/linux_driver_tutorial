@@ -1,0 +1,6 @@
+[submodule "lib/VivadoIp/vivadoIP_fpga_base"]
+	path = lib/VivadoIp/vivadoIP_fpga_base
+	url = https://github.com/paulscherrerinstitute/vivadoIP_fpga_base
+[submodule "lib/VHDL/psi_common"]
+	path = lib/VHDL/psi_common
+	url = https://github.com/paulscherrerinstitute/psi_common
