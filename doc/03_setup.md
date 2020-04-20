@@ -14,7 +14,7 @@ The reference design downloaded in step 1 contains a good description about how 
 
 Follow the *[Enclustra Build Environment - HowTo Guide](https://download.enclustra.com/public_files/Design_Support/Application%20Notes/Enclustra_Build_Environment_HowToGuide_V02.pdf) [2]* to generate a bootable Linux and test it. This is where we start from (the tutorial does not cover the process of building a bootable Linux).
 
-Note that the tutorial assumes you are booting from SD card. You can choose other boot mechanisms but the descriptions will not fit one-to-one in this case.
+Note that the tutorial assumes you are booting from SD card. You can choose other boot mechanisms but the descriptions will not fit one-to-one in this case. The partition containing the bootloader, linux kernel etc. is referred to as *boot partition*. The partition containing the rootfilesystem is referred to as *rootfs partition*.
 
 ## 4. Add the *fpga_base* IP-Core
 
