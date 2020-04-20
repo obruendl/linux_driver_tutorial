@@ -12,7 +12,7 @@ The reference design downloaded in step 1 contains a good description about how 
 
 ## 3. Enclustra Linux Build Environment
 
-Follow the [Enclustra Build Environment - HowTo Guide](https://download.enclustra.com/public_files/Design_Support/Application%20Notes/Enclustra_Build_Environment_HowToGuide_V02.pdf) to generate a bootable Linux and test it. This is where we start from (the tutorial does not cover the process of building a bootable Linux).
+Follow the *[Enclustra Build Environment - HowTo Guide](https://download.enclustra.com/public_files/Design_Support/Application%20Notes/Enclustra_Build_Environment_HowToGuide_V02.pdf) [2]* to generate a bootable Linux and test it. This is where we start from (the tutorial does not cover the process of building a bootable Linux).
 
 Note that the tutorial assumes you are booting from SD card. You can choose other boot mechanisms but the descriptions will not fit one-to-one in this case.
 

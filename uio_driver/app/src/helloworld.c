@@ -21,61 +21,38 @@
 #include <sys/mman.h>
 #include <fcntl.h>
 #include <stdint.h>
-#include <sys/ioctl.h>
 
-#define uio
 
 int main()
 {
-    printf("Hello World\n");
-
+	//Declaration
     int f;
     char* ptr;
 
-#ifdef uio
+    //Initial print
+    printf("Hello World\n");
+
+    //Open UIO device
     f = open("/dev/uio0", O_RDWR);
     if (f < 0) {
     	printf("Failed to open\n");
     }
+
+    //Map memory to user space
     ptr = mmap(0, 0x1000, PROT_READ | PROT_WRITE, MAP_SHARED, f, 0);
     if (ptr == MAP_FAILED) {
     	printf("Failed to map\n");
     }
+
+    //Memory can now be accessed
+    //Read
     uint32_t version = *((uint32_t*)&ptr[0x00]);
     uint32_t year = *((uint32_t*)&ptr[0x04]);
     printf("version=0x%08X\n", version);
     printf("year=%d\n", year);
-#endif
-
-#ifndef uio
-    typedef struct date_s {
-    	int year;
-    	int month;
-    	int day;
-    	int hour;
-    	int minute;
-    } date_t;
-
-    date_t date;
-
-	#define WR_SW_VERSION _IOW('a', 'a', uint32_t)
-	#define RD_SW_VERSION _IOR('a', 'b', uint32_t*)
-	#define RD_FW_VERSION _IOR('a', 'c', uint32_t*)
-	#define RD_DATE _IOR('a', 'd', date_t*)
-
-    f = open("/dev/fpga_base", O_RDWR);
-    if (f < 0) {
-    	printf("Failed to open\n");
-    }
-    uint32_t version;
-    ioctl(f, RD_FW_VERSION, &version);
-    printf("version=0x%08X\n", version);
-    ioctl(f, RD_DATE, &date);
-    printf("year=%d\n", date.year);
-    ioctl(f, WR_SW_VERSION, 123);
-    ioctl(f, RD_SW_VERSION, &version);
-    printf("swversion=0x%d\n", version);
-#endif
-
+    //Write
+    *((uint32_t*)&ptr[0x18]) = 0xABCD;
+    version = *((uint32_t*)&ptr[0x18]);
+    printf("sw-version=0x%08X\n", version);
     return 0;
 }
