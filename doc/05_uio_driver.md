@@ -4,7 +4,7 @@
 
 ## Overview
 
-Writing a Linux driver always imposes the risk of crashing the whole kernel. Additionally drivers are hard to debug, so whenever possible, it should be avoided writing kernel code.
+Writing a Linux driver always imposes the risk of crashing the whole kernel. Additionally drivers are hard to debug, so whenever possible, writing kernel code should be avoided.
 
 In order to achieve this, Linux provides a generalized user-space I/O driver (UIO). The idea is to move the logic of the driver itself into the user space and only have a very simple kernel module that tells the generalized driver which addresses etc. to use.
 
@@ -12,7 +12,7 @@ In order to achieve this, Linux provides a generalized user-space I/O driver (UI
 
 First we have to let linux know, that there is a UIO device and at which addresses it is. To do so, the device tree of the reference design must be edited.
 
-Details about location of devicetree files, how to build them, etc. can be found in the  [Enclustra Build Environment - HowTo Guide](https://download.enclustra.com/public_files/Design_Support/Application%20Notes/Enclustra_Build_Environment_HowToGuide_V02.pdf)
+Details about location of devicetree files, how to build them, etc. can be found in the  *[nclustra Build Environment - HowTo Guide](https://download.enclustra.com/public_files/Design_Support/Application%20Notes/Enclustra_Build_Environment_HowToGuide_V02.pdf)[2]*
 
 In our case, we add the section below:
 
@@ -42,7 +42,7 @@ The output file *zx5-obru-uio.dts* must be copied to the boot partition of the S
 
 A very small kernel module is required. It is only there to let the generic UIO driver know about the properties of the device (base address, interrupt number, etc.). 
 
-The very basic code for this kernel module can be found in [[root]/uio_driver/fpga_base.c](../uio_driver/fpga_base.c). Note that the current version of the example code does not contain any interrupt support yet.
+The code for this kernel module can be found in [[root]/uio_driver/fpga_base.c](../uio_driver/fpga_base.c). Note that the current version of the example code does not contain any interrupt support yet.
 
 ## 5. Compile Kernel Module
 
@@ -78,7 +78,7 @@ Then navigate to the correct directory on your *rootfs* ...
     insmod fpga_base.ko
 </pre>
 
-You should now see a new device named popping up in the */dev* folder named *uio0*. Note that UIO devices are numbered starting at zero. This is not very handy. However, there are ways to acquire more information. These are described below.
+You should now see a new device named *uio0* popping up in the */dev* folder. Note that UIO devices do not have a readable name but they are numbered starting at zero. This is not very handy. However, there are ways to acquire more information. These are described below.
 
 ## 7. Getting Information about a UIO Device
 
@@ -135,7 +135,7 @@ Then navigate to the correct directory on your *rootfs* ...
 ... and start the application. Before, the UIO driver must be loaded of course.
 
 <pre>
-	insmod ./fpga_base.ko
+    insmod ./fpga_base.ko
     ./uio_test.elf
 </pre>
 
@@ -148,7 +148,7 @@ You should now see the following output:
     sw-version=0x0000ABCD
 </pre>
 
-Note that the "year" output may change according to the year you built the FPGA application in.
+Note that the "year" output may change according to the year you built the FPGA bitstream in.
 
 ## 10. Conclusion
 
