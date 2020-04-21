@@ -122,7 +122,7 @@ static int fpga_base_probe(struct platform_device *pdev)
 	int ret;
 	struct resource* res;
 	struct device_node* np;
-	void* ptr;
+	const void* ptr;
 
 	//Kernel memory must be allocated using kmalloc
 	priv = kmalloc(sizeof(*priv), GFP_KERNEL);
@@ -213,7 +213,7 @@ void __exit fpga_base_exit(void)
 module_platform_driver(fpga_base_driver);
 
 //Module information
-MODULE_LICENSE("GPLv2");
+MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Oliver Bründler");
 MODULE_DESCRIPTION("A simple device driver");
 MODULE_VERSION("1.0");
