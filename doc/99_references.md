@@ -7,6 +7,7 @@
 3. [Enclustra Download Page](https://download.enclustra.com/)
 4. [ZX5 Reference Design](https://download.enclustra.com/public_files/SoC_Modules/Mercury_ZX5/Mercury_ZX5_Reference_Design_for_Mercury_PE1_V4.zip)
 5. [PSI FPGA Libraries](https://github.com/paulscherrerinstitute/psi_fpga_all)
+6. [Article about linux miscdevice](https://www.linuxjournal.com/article/2920)
 
 
 
