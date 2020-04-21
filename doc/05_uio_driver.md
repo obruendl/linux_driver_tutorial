@@ -26,7 +26,7 @@ In our case, we add the section below:
 
 The full device-tree file is available in [[root]/uio_driver/zx5-obru-uio.dts](../uio_driver/zx5-obru-uio.dts)
 
-## 3. Compile Device Tree
+## 2. Compile Device Tree
 
 The easiest way to compile the edited devicetree, is copying it to the folder *[root]/bsp-xilinx/sources/xilinx-linux/arch/arm/boot/dts* directory of your Enclustra Build Environment.
 
@@ -38,13 +38,13 @@ dtc -O dtb -o zx5-obru-uio.dtb zx5-obru-uio.dts
 
 The output file *zx5-obru-uio.dts* must be copied to the boot partition of the SD card and renamed to *devicetree.dtb* (as expected by the boot process) and hence replace de default *devicetree.dtb* file.
 
-## 4. Write Kernel Module
+## 3. Write Kernel Module
 
 A very small kernel module is required. It is only there to let the generic UIO driver know about the properties of the device (base address, interrupt number, etc.). 
 
 The code for this kernel module can be found in [[root]/uio_driver/fpga_base.c](../uio_driver/fpga_base.c). Note that the current version of the example code does not contain any interrupt support yet.
 
-## 5. Compile Kernel Module
+## 4. Compile Kernel Module
 
 The details about how to build kernel modules for the Enclustra Embedded Build Environment are explained in *[Enclustra Build Environment - HowTo Guide](https://download.enclustra.com/public_files/Design_Support/Application%20Notes/Enclustra_Build_Environment_HowToGuide_V02.pdf) [2]*. 
 
@@ -60,7 +60,7 @@ To build the driver, just navigate to the *[root]/uio_driver* directory and exec
 
 Now copy the *fpga_base.ko* kernel object file to the directory */root/uio_driver* of your SD Card (*rootfs* partition).
 
-## 6. Loading Kernel Module
+## 5. Loading Kernel Module
 
 Follow the steps below to load the kernel module:
 
@@ -80,7 +80,7 @@ Then navigate to the correct directory on your *rootfs* ...
 
 You should now see a new device named *uio0* popping up in the */dev* folder. Note that UIO devices do not have a readable name but they are numbered starting at zero. This is not very handy. However, there are ways to acquire more information. These are described below.
 
-## 7. Getting Information about a UIO Device
+## 6. Getting Information about a UIO Device
 
 The plain numbering of UIO devices without a human readable name can easily lead to confusion. Luckily, there are some ways to find out more about a UIO device.
 
@@ -99,7 +99,7 @@ Another even more handy way, is the *lsuio* utility. It is not enabled by defaul
             mape[0]: addr=0x43C10000, size=4096
 </pre>
 
-## 8. Writing a User Space Application
+## 7. Writing a User Space Application
 
 A small user space application is provided along with the example in order to show how to use the UIO driver from user space. The application is provided as *Xilinx SDK* project. The source file can be found in [[root]/uio_driver/app/src/helloworld.c](../uio_driver/app/src/helloworld.c).
 
@@ -120,7 +120,7 @@ In SDK you should now see a project called *uio_test*. By default SDK should aut
 
 Now copy the *uio_test.elf*  file to the directory */root/uio_driver* of your SD Card (*rootfs* partition).
 
-## 9. Test User Space Application
+## 8. Test User Space Application
 
 Follow the steps below to load the kernel module:
 
@@ -150,7 +150,7 @@ You should now see the following output:
 
 Note that the "year" output may change according to the year you built the FPGA bitstream in.
 
-## 10. Conclusion
+## 9. Conclusion
 
 In this chapter, a simple UIO based device driver was built and installed. It was used from a very simple command line application.
 
