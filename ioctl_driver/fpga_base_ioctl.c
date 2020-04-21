@@ -13,6 +13,16 @@
 #include "fpga_base_ioctl.h"
 
 //*************************************************************************
+// Driver internal data structures
+//*************************************************************************
+//Instance private data of the driver
+typedef struct prvivate_s {
+	void* regs;						//Pointer to register memory
+	struct platform_device* pdev;	//Pointer to device
+	struct miscdevice mdev;			//Pointer to miscdevice
+} private_t;
+
+//*************************************************************************
 // Helper Functions
 //*************************************************************************
 

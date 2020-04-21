@@ -1,4 +1,4 @@
-[<< back](04_devmem.md) | [index](01_index.md) | [forward >> ](04_uio_driver.md)
+[<< back](05_uio_driver.md) | [index](01_index.md) | [forward >> ](04_uio_driver.md)
 
 # IOCTL Driver
 
@@ -48,23 +48,113 @@ dtc -O dtb -o zx5-obru-ioctl.dtb zx5-obru-ioctl.dts
 
 The output file *zx5-obru-ioctl.dts* must be copied to the boot partition of the SD card and renamed to *devicetree.dtb* (as expected by the boot process) and hence replace de default *devicetree.dtb* file.
 
-## 4. Write Kernel Module
+## 3. Write Kernel Module
 
-A very small kernel module is required. It is only there to let the generic UIO driver know about the properties of the device (base address, interrupt number, etc.). 
+In contrast to a UIO driver, we need to write quite a bit of kernel code even for our very simple example.
 
-The very basic code for this kernel module can be found in [[root]/uio_driver/fpga_base.c](../uio_driver/fpga_base.c). Note that the current version of the example code does not contain any interrupt support yet.
+The kernel module is split into a .h and a .c file. The .h file contains definitions that are also required for the user space application (e.g. definition of the IOCTL commands). Therefore the same header file can be used for the driver and the user-space application.
 
-## 5. Compile Kernel Module
+The source code is not explained in detail at this point. Instead, explanatory comments are added to the code. At this point it makes sense to have a look at the source code that can be found here:
+
+* [[root]/ioctl_driver/fpga_base_ioctl.c](../ioctl_driver/fpga_base_ioctl.c)
+* [[root]/ioctl_driver/fpga_base_ioctl.h](../ioctl_driver/fpga_base_ioctl.h)
+
+One thing that is worth being discussed in a bit more detail is the handling of per-instance private data (*private_t* in the code). The memory is allocated per instance in the *..._probe()* function and passed to other functions using *platform_set_drvdata()* and *container_of()*. This way of passing around data in my opinion is not very intuitive for newbies.
+
+I basically extracted to code from many examples but could not find a good piece of documentation even after searching for a while (*if you can help out here, your input is appreciated!*). What I could find out, is that *file->private_data* is set to the *miscdevice* structure when the device is opened (automatically). We can then obtain the parent structure using the *container_of* macro.
+
+What is not entirely clear to me, is why the call to *platform_set_drvdata* is required. However, somehow it seems to be required.
+
+## 4. Compile Kernel Module
+
+The details about how to build kernel modules for the Enclustra Embedded Build Environment are explained in *[Enclustra Build Environment - HowTo Guide](https://download.enclustra.com/public_files/Design_Support/Application%20Notes/Enclustra_Build_Environment_HowToGuide_V02.pdf) [2]*. 
+
+A small script allowing building a driver with a single command is provided: [[root]/ioctl_driver/compile.sh](../ioctl_driver/compile.sh). The script is of course closely related to the makefile [[root]/ioctl_driver/Makefile](../ioctl_driver/Makefile). 
+
+**Note that you must edit the _BSP_XILINX_ variable in the _compile.sh_ script to match your system before building the driver.**
+
+To build the driver, just navigate to the *[root]/ioctl_driver* directory and execute the follwoing command:
+
+<pre>
+    ./compile.sh
+</pre>
 
 
+Now copy the *fpga_base_ioctl.ko* kernel object file to the directory */root/ioctl_driver* of your SD Card (*rootfs* partition).
 
-## Load Kernel Module
+## 5. Load Kernel Module
 
-Bla, bla, bla
+Follow the steps below to load the kernel module:
+
+Boot the target device.
+
+Then navigate to the correct directory on your *rootfs* ...
+
+<pre>
+    cd /root/ioctl_driver
+</pre>
+
+
+... and load the module
+
+<pre>
+    insmod fpga_base_ioctl.ko
+</pre>
+
+You should now see the prints from the probe function:
+
+<pre>
+    Somevalue read from dt = 00009876
+    Registered miscdev in fpga_base
+</pre>
+
+So the module was loaded and the corresponding devicetree entry was found. As a result the probe function was called. We can also see that the *somevalue* property was acquired from the devicetree correctly.
+
+We can also see that the entry *fpga_base* popped up in the */dev* folder:
+
+<pre>
+    # ls /dev/fpga*
+    /dev/fpga_base
+</pre>
+
+The name is defined in the driver-code:
+
+<pre>
+	...
+    priv->mdev.name 	= "fpga_base";
+    ...
+</pre>
+
+We can also see that a corresponding folder is added to *sys/class/misc* (becaue it is a miscdevice):
+
+<pre>
+    # cd /sys/class/misc
+    # ls
+    cpu_dma_latency     memory_bandwidth    ubi_ctrl
+	<b>fpga_base</b>           network_latency     vga_arbiter
+	loop-control        network_throughput  watchdog
+</pre>
 
 ## 6. Write User Space Application
 
-Bla bla bla
+A small user space application is provided along with the example in order to show how to use the IOCTL driver from user space. The application is provided as *Xilinx SDK* project. The source file can be found in [[root]/ioctl_driver/app/src/helloworld.c](../ioctl_driver/app/src/helloworld.c).
+
+The program only has a hand full of lines and explanatory comments. So it is not described here in more detail. Just have a look at the sources.
+
+To build the application, follow the steps below:
+
+1. Start SDK
+2. Create/choose an empty workspace
+3. Click *File > Import*
+4. Choose *General > Existing Projects into Workspace*
+5. Select the folder *[root]/ioctl_driver*
+6. Press *Finish*
+
+In SDK you should now see a project called *ioctl_test*. By default SDK should automatically build the project and produce a *.elf file. If you disabled automatic build in SDK, you have to manually build the project using *Project > Build All*.
+
+![sdk_project.png](./06_pics/sdk_project.png)
+
+Now copy the *ioctl_test.elf*  file to the directory */root/uio_driver* of your SD Card (*rootfs* partition).
 
 ## Test User Space Application
 
@@ -72,4 +162,4 @@ Bla bla bla
 
 
 
-[<< back](04_devmem.md) | [index](01_index.md) | [forward >> ](04_uio_driver.md)
+[<< back](05_uio_driver.md) | [index](01_index.md) | [forward >> ](04_uio_driver.md)

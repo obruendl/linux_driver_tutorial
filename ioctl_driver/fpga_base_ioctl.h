@@ -1,3 +1,5 @@
+
+
 //Struct used as parameter to one IOCTL call
 typedef struct date_s {
 	int year;
@@ -7,12 +9,6 @@ typedef struct date_s {
 	int minute;
 } date_t;
 
-//Instance private data of the driver
-typedef struct prvivate_s {
-	void* regs;						//Pointer to register memory
-	struct platform_device* pdev;	//Pointer to device
-	struct miscdevice mdev;			//Pointer to miscdevice
-} private_t;
 
 //IOCTL commands
 #define WR_SW_VERSION _IOW('a','a',uint32_t)
