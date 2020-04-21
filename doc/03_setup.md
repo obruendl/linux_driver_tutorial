@@ -4,7 +4,7 @@
 
 ## 1. Get the Reference Desgin
 
-First of all, the reference design of the target HW has to be downloaded from the *Enclustra Download Page [3]*. In our case, this is the *[Mercury ZX5 Reference Design for Mercury PE1 V4](https://download.enclustra.com/public_files/SoC_Modules/Mercury_ZX5/Mercury_ZX5_Reference_Design_for_Mercury_PE1_V4.zip) [4]*. Download the zip and extract it somewhere to your hard-drive.
+First of all, the reference design of the target HW has to be downloaded from the *[Enclustra Download Page](https://download.enclustra.com/) [3]*. In our case, this is the *[Mercury ZX5 Reference Design for Mercury PE1 V4](https://download.enclustra.com/public_files/SoC_Modules/Mercury_ZX5/Mercury_ZX5_Reference_Design_for_Mercury_PE1_V4.zip) [4]*. Download the zip and extract it somewhere to your hard-drive.
 
 ## 2. Reference Design Setup
 
@@ -12,9 +12,9 @@ The reference design downloaded in step 1 contains a good description about how 
 
 ## 3. Enclustra Linux Build Environment
 
-Follow the [Enclustra Build Environment - HowTo Guide](https://download.enclustra.com/public_files/Design_Support/Application%20Notes/Enclustra_Build_Environment_HowToGuide_V02.pdf) to generate a bootable Linux and test it. This is where we start from (the tutorial does not cover the process of building a bootable Linux).
+Follow the *[Enclustra Build Environment - HowTo Guide](https://download.enclustra.com/public_files/Design_Support/Application%20Notes/Enclustra_Build_Environment_HowToGuide_V02.pdf) [2]* to generate a bootable Linux and test it. This is where we start from (the tutorial does not cover the process of building a bootable Linux).
 
-Note that the tutorial assumes you are booting from SD card. You can choose other boot mechanisms but the descriptions will not fit one-to-one in this case.
+Note that the tutorial assumes you are booting from SD card. You can choose other boot mechanisms but the descriptions will not fit one-to-one in this case. The partition containing the bootloader, linux kernel etc. is referred to as *boot partition*. The partition containing the rootfilesystem is referred to as *rootfs partition*.
 
 ## 4. Add the *fpga_base* IP-Core
 
@@ -55,8 +55,7 @@ The block design should now look like this:
 
 
 
-Now assign the address *0x43C10000* to the new IP-Core. You could use any other address but all examples will contain this address.
-
+Now assign the address *0x43C10000* to the new IP-Core. You could use any other address but all examples will assume this address, so it's recommended to keep this address.
 ![address.png](03_pics/address.png)
 
 

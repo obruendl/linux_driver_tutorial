@@ -8,7 +8,7 @@ See [Changelog](Changelog.md)
 
 ## Purpose of the Repository
 
-When getting into Linux driver Development, I had a quite hard time to find examples helping with the very first steps. Obviously most black-belt driver developers see these things as too easy to explain. 
+When getting into Linux driver development, I had a quite hard time to find examples helping with the very first steps. Obviously most black-belt driver developers see these things as too easy to explain. 
 
 I read the note "there are plenty of examples in the kernel" many times. Just that complex drivers that contain 5'000 lines of code are maybe not the very simplest way to enter the topic. Especially because for newbies it may not be so easy to find out what is generic and what is specific to one driver.
 

@@ -10,11 +10,11 @@ We now have a bitstream we assume to get loaded during the boot process. However
 
 First of all, we need to know how the register bank of the IP-Core looks. Otherwise we cannot have any expectations of how to interact with it. 
 
-To find out about the register bank of the IP-Core, open the document [[root]/lib/VivadoIp/vivadoIP_fpga_base/doc/fpga_base.pdf](../lib/VivadoIp/vivadoIP_fpga_base/doc/fpga_base.pdf) and jump to page 5.
+To find out about the register bank of the IP-Core, open the document [[root]/lib/VivadoIp/vivadoIP_fpga_base/doc/fpga_base.pdf](https://github.com/paulscherrerinstitute/vivadoIP_fpga_base/blob/master/doc/fpga_base.pdf) and jump to page 5.
 
 ![regbank.png](04_pics/regbank.png)
 
-Okay, so we expect to read the version configured in the Vivado GUI (in our case 0xAB12CD34) from address 0x00. Then we expect to read the FW build date. 
+Okay, so we expect to read the version configured in the Vivado GUI (in our case 0xAB12CD34) from address 0x00. In the registers after the version, we expect to read the FW build date. 
 
 The SW build date may be a bit confusting. How can the FW know about this? Actually these are just read/write registers. They are meant to be set by the processor of an embedded system and to be read by the control system. In our case, we can just see them as read/write registers.
 
