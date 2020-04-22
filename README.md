@@ -1,7 +1,7 @@
 # General Information
 
 ## Maintainer
-Oliver Bründler [oli.bruendler@gmx.ch
+Oliver Bründler [oli.bruendler@gmx.ch]
 
 ## Changelog
 See [Changelog](Changelog.md)

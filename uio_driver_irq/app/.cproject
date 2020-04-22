@@ -18,7 +18,7 @@
 					<folderInfo id="xilinx.gnu.armv7.linux.exe.debug.31557383." name="/" resourcePath="">
 						<toolChain id="xilinx.gnu.armv7.linux.exe.debug.toolchain.1004785723" name="Xilinx ARM v7 GNU/Linux Toolchain" superClass="xilinx.gnu.armv7.linux.exe.debug.toolchain">
 							<targetPlatform binaryParser="com.xilinx.sdk.managedbuilder.XELF.arm.a53.x32.linux" id="xilinx.armv7.linux.target.gnu.base.debug.1978487539" isAbstract="false" name="Debug Platform" superClass="xilinx.armv7.linux.target.gnu.base.debug"/>
-							<builder buildPath="${workspace_loc:/uio_test}/Debug" enableAutoBuild="true" id="xilinx.gnu.armv7.linux.toolchain.builder.debug.2091119072" managedBuildOn="true" name="GNU make.Debug" superClass="xilinx.gnu.armv7.linux.toolchain.builder.debug"/>
+							<builder buildPath="${workspace_loc:/uio_test_irq}/Debug" enableAutoBuild="true" id="xilinx.gnu.armv7.linux.toolchain.builder.debug.2091119072" managedBuildOn="true" name="GNU make.Debug" superClass="xilinx.gnu.armv7.linux.toolchain.builder.debug"/>
 							<tool id="xilinx.gnu.armv7.linux.c.toolchain.assembler.debug.534396251" name="ARM v7 Linux gcc assembler" superClass="xilinx.gnu.armv7.linux.c.toolchain.assembler.debug">
 								<inputType id="xilinx.gnu.assembler.input.870383886" superClass="xilinx.gnu.assembler.input"/>
 							</tool>
@@ -64,7 +64,7 @@
 					<folderInfo id="xilinx.gnu.armv7.linux.exe.release.1664011045." name="/" resourcePath="">
 						<toolChain id="xilinx.gnu.armv7.linux.exe.release.toolchain.171803112" name="Xilinx ARM v7 GNU/Linux Toolchain" superClass="xilinx.gnu.armv7.linux.exe.release.toolchain">
 							<targetPlatform binaryParser="com.xilinx.sdk.managedbuilder.XELF.arm.a53.x32.linux" id="xilinx.armv7.linux.target.gnu.base.release.566749075" isAbstract="false" name="Release Platform" superClass="xilinx.armv7.linux.target.gnu.base.release"/>
-							<builder buildPath="${workspace_loc:/uio_test}/Release" enableAutoBuild="true" id="xilinx.gnu.armv7.linux.toolchain.builder.release.1749723967" managedBuildOn="true" name="GNU make.Release" superClass="xilinx.gnu.armv7.linux.toolchain.builder.release"/>
+							<builder buildPath="${workspace_loc:/uio_test_irq}/Release" enableAutoBuild="true" id="xilinx.gnu.armv7.linux.toolchain.builder.release.1749723967" managedBuildOn="true" name="GNU make.Release" superClass="xilinx.gnu.armv7.linux.toolchain.builder.release"/>
 							<tool id="xilinx.gnu.armv7.linux.c.toolchain.assembler.release.648234473" name="ARM v7 Linux gcc assembler" superClass="xilinx.gnu.armv7.linux.c.toolchain.assembler.release">
 								<inputType id="xilinx.gnu.assembler.input.1374415942" superClass="xilinx.gnu.assembler.input"/>
 							</tool>
@@ -96,7 +96,7 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="uio_test.xilinx.gnu.armv7.linux.exe.860669179" name="Xilinx ARM v7 Linux Executable" projectType="xilinx.gnu.armv7.linux.exe"/>
+		<project id="uio_test_irq.xilinx.gnu.armv7.linux.exe.860669179" name="Xilinx ARM v7 Linux Executable" projectType="xilinx.gnu.armv7.linux.exe"/>
 	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>

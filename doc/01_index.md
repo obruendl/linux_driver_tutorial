@@ -8,6 +8,9 @@
 4. [DevMem](04_devmem.md)
 5. [Writing a UIO driver](05_uio_driver.md)
 6. [Writing an IOCTL driver](06_ioctl_driver.md)
+7. [Interrupt for UIO driver](./07_uio_irq.md)
+8. [References](./99_references.md)
+
 
 
 [index](01_index.md) | [forward >> ](02_introduction.md)

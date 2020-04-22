@@ -92,7 +92,7 @@ Boot the target device.
 Load the generic UIO driver:
 
 <pre>
-    modprobe uio_pdrv_genirq of_id="generic_uio"
+    modprobe uio_pdrv_genirq of_id="generic-uio"
 </pre>
 
 The *of_id="generic_uio"* parameter configures the driver to be loaded for all devicetree entries with this compatible string (like the one we created).
@@ -100,14 +100,14 @@ The *of_id="generic_uio"* parameter configures the driver to be loaded for all d
 
 You should now see a new device named *uio0* popping up in the */dev* folder. Note that UIO devices do not have a readable name but they are numbered starting at zero. This is not very handy. However, there are ways to acquire more information. These are described below.
 
-## 6. Getting Information about a UIO Device
+## 7. Getting Information about a UIO Device
 
 The plain numbering of UIO devices without a human readable name can easily lead to confusion. Luckily, there are some ways to find out more about a UIO device.
 
 One way to learn more about UIO devices is suing the */sys/class/uio* directory structure. For example:
 
 <pre>
-    #cat /sys/class/uio/uio0/name
+    # cat /sys/class/uio/uio0/name
     uio_fpga_base
 </pre>
 
@@ -121,7 +121,7 @@ Another even more handy way, is the *lsuio* utility. It is not enabled by defaul
 </pre>
 
 
-## 7. Writing a User Space Application
+## 8. Writing a User Space Application
 
 A small user space application is provided along with the example in order to show how to use the UIO driver from user space. The application is provided as *Xilinx SDK* project. The source file can be found in [[root]/uio_driver/app/src/helloworld.c](../uio_driver/app/src/helloworld.c).
 
@@ -142,7 +142,7 @@ In SDK you should now see a project called *uio_test*. By default SDK should aut
 
 Now copy the *uio_test.elf*  file to the directory */root/uio_driver* of your SD Card (*rootfs* partition).
 
-## 8. Test User Space Application
+## 9. Test User Space Application
 
 Follow the steps below to load the kernel module:
 
@@ -173,7 +173,7 @@ You should now see the following output:
 
 Note that the "year" output may change according to the year you built the FPGA bitstream in.
 
-## 9. Conclusion
+## 10. Conclusion
 
 In this chapter, a simple UIO based device driver was utilized. It was used from a very simple application. To achieve this, we did not have to write a single line of kernel code.
 

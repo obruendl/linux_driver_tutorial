@@ -34,136 +34,108 @@ The changes are done now. Please follow the description in [Setup](./03_setup.md
 
 ## 2. Edit Device Tree
 
-First we have to let Linux know about our device. To do so, we edit the devicetree.
-
-Details about location of devicetree files, how to build them, etc. can be found in the  [Enclustra Build Environment - HowTo Guide](https://download.enclustra.com/public_files/Design_Support/Application%20Notes/Enclustra_Build_Environment_HowToGuide_V02.pdf)
-
-In our case, we add the section below to the default devicetree:
+Compared to  [UIO Driver Tutorial](./05_uio_driver), the devicetree entry is modified as shown below:
 
 <pre>
-    fpga_base@43C10000{	
+	uio_fpga_base@43C10000{
 		status = "okay";
-		compatible = "psi,fpga-base";
+		compatible = "generic-uio";
 		reg = < 0x43C10000 0x1000 >;
-		somevalue = < 0x9876 >;
+		<b>interrupt-parent = <&intc>;
+		interrupts = <0x0 (61-32) 1></b>
 	};
 </pre>
 
-The string assigned to *compatible* defines which driver to load. Each driver contains a list of such *compatible* strings it is compatible with. Linux will pair them (i.e. load a driver with matching string for each peripheral).
+What do these changes mean? 
 
-You may also wonder about the the line containing *somevalue*. This value does not have any meaning but is used to demonstrate how to pass information from the devicetree to the driver. In real-world this mechanism is used to pass information about the hardware to the driver.
+* The *interrupts* property is built from a < X Y Z > tuple.
 
-The full device-tree file is available in [[root]/ioctl_driver/zx5-obru-uio.dts](../uio_driver/zx5-obru-ioctl.dts)
+  * X = 1 for shared peripheral interrupts (SPI), 0 else3
+  * Y = IRQ number (IRQnr - 32 for non SPI IRQs). In our case we use IRQ61 which is the first FPGA fabric IRQ in a Zynq-7000.
+  * Z = IRQ type according to [linux/interrupt.h](https://github.com/torvalds/linux/blob/master/include/linux/interrupt.h). 1 is for rising-edge IRQs (IRQF_TRIGGER_RISING).
 
+* The *interrupt-parent* property is a link to the device-tree node of the interrupt controller the IRQ is routed to. In our case, the node *intc* is defined in the include file *zynq-7000.dtsi* which is included in the main device-tree:
 
+  <pre>
+      ...
+      <b>intc</b>: interrupt-controller@f8f01000 {
+      	compatible = "arm,cortex-a9-gic"
+      	#interrupt-cells = <3>
+      	interrupt-controller;
+      	reg = <0xF8F01000 0x1000>,
+      	      <0xF8F00100 0x100>;
+      }
+      ...
+  </pre>
 
-https://forums.xilinx.com/t5/Embedded-Linux/Interrupt-numbers-changed-in-recent-kernels/m-p/685685/highlight/true#M15577
+  The full device-tree file is available in [[root]/uio_driver_irq/zx5-obru-uio-irq.dts](../uio_driver_irq/zx5-obru-uio-irq.dts)
 
-https://github.com/torvalds/linux/blob/master/include/linux/interrupt.h
-
-## 2. Compile Device Tree
+## 3. Compile Device Tree
 
 The easiest way to compile the edited devicetree, is copying it to the folder *[root]/bsp-xilinx/sources/xilinx-linux/arch/arm/boot/dts* directory of your Enclustra Build Environment.
 
 The device-tree can then be compiled into a devicetree-blob using the command below (from within the *dts* drectiory mentioned above):
 
 <pre>
-dtc -O dtb -o zx5-obru-ioctl.dtb zx5-obru-ioctl.dts
+dtc -O dtb -o zx5-obru-uio-irq.dtb zx5-obru-uio-irq.dts
+</pre>
+
+The output file *zx5-obru-uio-irq.dtb* must be copied to the boot partition of the SD card and renamed to *devicetree.dtb* (as expected by the boot process) and hence replace de default *devicetree.dtb* file.
+
+## 4. Configure Kernel
+
+This was done in [UIO Driver](05_uio_driver.md), so it is not explained again.
+
+## 5. Installing Kernel Module
+
+This was done in [UIO Driver](05_uio_driver.md), so it is not explained again.
+
+## 6. Loading Kernel Module
+
+The same steps as for [UIO Driver](05_uio_driver.md) are required. The command is repeated just to avoid that you have to switch documents because you do not remember the command:
+
+<pre>
+    modprobe uio_pdrv_genirq of_id="generic-uio"
+</pre>
+
+## 7. Getting Information about a UIO Device
+
+The plain numbering of UIO devices without a human readable name can easily lead to confusion. Luckily, there are some ways to find out more about a UIO device.
+
+One way to learn more about UIO devices is suing the */sys/class/uio* directory structure. For example:
+
+<pre>
+    # cat /sys/class/uio/uio0/name
+    uio_fpga_base
 </pre>
 
 
-The output file *zx5-obru-ioctl.dts* must be copied to the boot partition of the SD card and renamed to *devicetree.dtb* (as expected by the boot process) and hence replace de default *devicetree.dtb* file.
-
-## 3. Write Kernel Module
-
-In contrast to a UIO driver, we need to write quite a bit of kernel code even for our very simple example.
-
-The kernel module is split into a .h and a .c file. The .h file contains definitions that are also required for the user space application (e.g. definition of the IOCTL commands). Therefore the same header file can be used for the driver and the user-space application.
-
-The source code is not explained in detail at this point. Instead, explanatory comments are added to the code. At this point it makes sense to have a look at the source code that can be found here:
-
-* [[root]/ioctl_driver/fpga_base_ioctl.c](../ioctl_driver/fpga_base_ioctl.c)
-* [[root]/ioctl_driver/fpga_base_ioctl.h](../ioctl_driver/fpga_base_ioctl.h)
-
-One thing that is worth being discussed in a bit more detail is the handling of per-instance private data (*private_t* in the code). The memory is allocated per instance in the *..._probe()* function and passed to other functions using *platform_set_drvdata()* and *container_of()*. This way of passing around data in my opinion is not very intuitive for newbies.
-
-I basically extracted to code from many examples but could not find a good piece of documentation even after searching for a while (*if you can help out here, your input is appreciated!*). What I could find out, is that *file->private_data* is set to the *miscdevice* structure when the device is opened (automatically). We can then obtain the parent structure using the *container_of* macro.
-
-What is not entirely clear to me, is why the call to *platform_set_drvdata* is required. However, somehow it seems to be required.
-
-## 4. Compile Kernel Module
-
-The details about how to build kernel modules for the Enclustra Embedded Build Environment are explained in *[Enclustra Build Environment - HowTo Guide](https://download.enclustra.com/public_files/Design_Support/Application%20Notes/Enclustra_Build_Environment_HowToGuide_V02.pdf) [2]*. 
-
-A small script allowing building a driver with a single command is provided: [[root]/ioctl_driver/compile.sh](../ioctl_driver/compile.sh). The script is of course closely related to the makefile [[root]/ioctl_driver/Makefile](../ioctl_driver/Makefile). 
-
-**Note that you must edit the _BSP_XILINX_ variable in the _compile.sh_ script to match your system before building the driver.**
-
-To build the driver, just navigate to the *[root]/ioctl_driver* directory and execute the follwoing command:
+Another even more handy way, is the *lsuio* utility. It is not enabled by default but it can easily be enabled when configuring buildroot. Just search (using '/') for "lsuio" and enable the corresponding package. If *lsuio* is present you can use it as described below:
 
 <pre>
-    ./compile.sh
+    # lsuio
+    uio0: name=uio_fpga_base, version=devicetree, events=<b>0</b>
+            map[0]: addr=0x43C10000, size=4096
 </pre>
 
+The number of events is the total number of IRQs that was received by this device. So if you call *lsuio* after you received interrupts, this number may be different.
 
-Now copy the *fpga_base_ioctl.ko* kernel object file to the directory */root/ioctl_driver* of your SD Card (*rootfs* partition).
-
-## 5. Load Kernel Module
-
-Follow the steps below to load the kernel module:
-
-Boot the target device.
-
-Then navigate to the correct directory on your *rootfs* ...
+To find out whether the interrupt is configured correctly, we can execute the command below:
 
 <pre>
-    cd /root/ioctl_driver
-</pre>
-
-
-... and load the module
-
-<pre>
-    insmod fpga_base_ioctl.ko
-</pre>
-
-You should now see the prints from the probe function:
-
-<pre>
-    Somevalue read from dt = 00009876
-    Registered miscdev in fpga_base
-</pre>
-
-So the module was loaded and the corresponding devicetree entry was found. As a result the probe function was called. We can also see that the *somevalue* property was acquired from the devicetree correctly.
-
-We can also see that the entry *fpga_base* popped up in the */dev* folder:
-
-<pre>
-    # ls /dev/fpga*
-    /dev/fpga_base
-</pre>
-
-The name is defined in the driver-code:
-
-<pre>
-	...
-    priv->mdev.name 	= "fpga_base";
+    # cat /proc/interrupts
+             CPU0   CPU1
+    ...
+    <b>47:	     21     0     GIC-0	61	Edge	uio_fpga_base</b>
     ...
 </pre>
 
-We can also see that a corresponding folder is added to *sys/class/misc* (becaue it is a miscdevice):
+First we can see that the IRQ61 is registered for our device. We can also see how many IRQs were handled by each CPU (in this case 21 IRQs were handled by CPU0).
 
-<pre>
-    # cd /sys/class/misc
-    # ls
-    cpu_dma_latency     memory_bandwidth    ubi_ctrl
-	<b>fpga_base</b>           network_latency     vga_arbiter
-	loop-control        network_throughput  watchdog
-</pre>
 
-## 6. Write User Space Application
+## 8. Write User Space Application
 
-A small user space application is provided along with the example in order to show how to use the IOCTL driver from user space. The application is provided as *Xilinx SDK* project. The source file can be found in [[root]/ioctl_driver/app/src/helloworld.c](../ioctl_driver/app/src/helloworld.c).
+A small user space application is provided along with the example in order to show how to use the UIO driver with IRQs from user space. The application is provided as *Xilinx SDK* project. The source file can be found in [[root]/uio_driver_irq/app/src/helloworld.c](../uio_driver_irq/app/src/helloworld.c).
 
 The program only has a hand full of lines and explanatory comments. So it is not described here in more detail. Just have a look at the sources.
 
@@ -173,16 +145,16 @@ To build the application, follow the steps below:
 2. Create/choose an empty workspace
 3. Click *File > Import*
 4. Choose *General > Existing Projects into Workspace*
-5. Select the folder *[root]/ioctl_driver*
+5. Select the folder *[root]/uio_driver_irq*
 6. Press *Finish*
 
-In SDK you should now see a project called *ioctl_test*. By default SDK should automatically build the project and produce a *.elf file. If you disabled automatic build in SDK, you have to manually build the project using *Project > Build All*.
+In SDK you should now see a project called *uio_test_irq*. By default SDK should automatically build the project and produce a *.elf file. If you disabled automatic build in SDK, you have to manually build the project using *Project > Build All*.
 
-![sdk_project.png](./06_pics/sdk_project.png)
+![sdk_project.png](./07_pics/sdk_project.png)
 
-Now copy the *ioctl_test.elf*  file to the directory */root/ioctl_driver* of your SD Card (*rootfs* partition).
+Now copy the *uio_test_irq.elf*  file to the directory */root/uio_driver_irq* of your SD Card (*rootfs* partition).
 
-## 7. Test User Space Application
+## 9. Test User Space Application
 
 Follow the steps below to load the kernel module:
 
@@ -191,42 +163,44 @@ Boot the target device.
 Then navigate to the correct directory on your *rootfs* ...
 
 <pre>
-    cd /root/ioctl_driver
+    cd /root/uio_driver_irq
 </pre>
+
 
 
 ... and start the application. Before, the driver must be loaded of course.
 
 <pre>
-    insmod ./fpga_base_ioctl.ko
-    ./ioctl_test.elf
+    modprobe uio_pdrv_genirq of_id="generic-uio"
+    ./uio_test_irq.elf
 </pre>
 
 
-You should now see the following output (containing user space *printf()* and *printk()* from the driver):
+
+You should now see the following output from your application:
 
 <pre>
     Hello World
-    fpga_base open
-    fpga_base ioctl
     version=0xAB12CD34
-    fpga_base ioctl
     year=2020
-    fpga_base_ioctl
-    Sw Version = 123
-    fpga_base ioctl
-    swversion=0x123
-    fpga_base release
+    sw-version=0x0000ABCD
+    Received IRQ
+    Received IRQ
+    Received IRQ
+    ...
 </pre>
+
 
 Note that the "year" output may change according to the year you built the FPGA bitstream in.
 
-The output is exactly matching what we would expect from the code. We can see all versions correctly. So obviously our driver works.
+The *Received IRQ* messages pop up one after the other every second because an IRQ is detected every second. So our interrupts seem to work.
 
-## 9. Conclusion
+## 10. Conclusion
 
-In this chapter, a simple IOCTL based device driver was built and installed. It was used from a very simple user space application.
+In this chapter, a simple UIO driver including IRQ was used. No kernel code was necessary to achieve this. Hence most FPGA IP can be supported this way without having to write drivers.
 
 Of course only the very simplest case of a driver is covered, but this should be a good starting point to base your own development of a real (and more complex) driver on.
+
+
 
 [<< back](06_ioctl_driver.md) | [index](01_index.md) | [forward >> ](99_references.md)

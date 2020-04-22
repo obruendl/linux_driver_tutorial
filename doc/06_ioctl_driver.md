@@ -1,4 +1,4 @@
-[<< back](05_uio_driver.md) | [index](01_index.md) | [forward >> ](99_references.md)
+[<< back](05_uio_driver.md) | [index](01_index.md) | [forward >> ](07_uio_irq.md)
 
 # IOCTL Driver
 
@@ -44,9 +44,7 @@ The device-tree can then be compiled into a devicetree-blob using the command be
 <pre>
 dtc -O dtb -o zx5-obru-ioctl.dtb zx5-obru-ioctl.dts
 </pre>
-
-
-The output file *zx5-obru-ioctl.dts* must be copied to the boot partition of the SD card and renamed to *devicetree.dtb* (as expected by the boot process) and hence replace de default *devicetree.dtb* file.
+The output file *zx5-obru-ioctl.dtb* must be copied to the boot partition of the SD card and renamed to *devicetree.dtb* (as expected by the boot process) and hence replace de default *devicetree.dtb* file.
 
 ## 3. Write Kernel Module
 
@@ -78,8 +76,6 @@ To build the driver, just navigate to the *[root]/ioctl_driver* directory and ex
 <pre>
     ./compile.sh
 </pre>
-
-
 Now copy the *fpga_base_ioctl.ko* kernel object file to the directory */root/ioctl_driver* of your SD Card (*rootfs* partition).
 
 ## 5. Load Kernel Module
@@ -203,4 +199,4 @@ In this chapter, a simple IOCTL based device driver was built and installed. It 
 
 Of course only the very simplest case of a driver is covered, but this should be a good starting point to base your own development of a real (and more complex) driver on.
 
-[<< back](05_uio_driver.md) | [index](01_index.md) | [forward >> ](99_references.md)
+[<< back](05_uio_driver.md) | [index](01_index.md) | [forward >> ](07_uio_irq.md)
