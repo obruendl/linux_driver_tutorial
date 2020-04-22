@@ -135,6 +135,9 @@ static irqreturn_t fpga_base_isr(int irq, void* arg)
 		printk("fpga_base received unknown IRQ %d\n", irq);
 		return IRQ_NONE;
 	}
+	
+	//Any code for reacting on the IRQ could be here. In our case, we just unlock a blocking IOCTL for demo purposes
+	
 	//I know, this is not thread-safe! ...
 	//... The example shall only show how to receive IRQs, it does not cover driver development in general.
 	//... Because IRQs only occur every second, it will work anyway

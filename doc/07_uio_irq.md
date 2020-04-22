@@ -1,6 +1,6 @@
-[<< back](06_ioctl_driver.md) | [index](01_index.md) | [forward >> ](99_references.md)
+[<< back](06_ioctl_driver.md) | [index](01_index.md) | [forward >> ](08_ioctl_irq.md)
 
-# Interrupts for UIO driver
+# Interrupts for UIO Driver
 
 ## Overview
 
@@ -203,4 +203,4 @@ Of course only the very simplest case of a driver is covered, but this should be
 
 
 
-[<< back](06_ioctl_driver.md) | [index](01_index.md) | [forward >> ](99_references.md)
+[<< back](06_ioctl_driver.md) | [index](01_index.md) | [forward >> ](08_ioctl_irq.md)

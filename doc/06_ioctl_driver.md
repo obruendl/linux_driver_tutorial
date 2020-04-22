@@ -33,7 +33,7 @@ The string assigned to *compatible* defines which driver to load. Each driver co
 
 You may also wonder about the the line containing *somevalue*. This value does not have any meaning but is used to demonstrate how to pass information from the devicetree to the driver. In real-world this mechanism is used to pass information about the hardware to the driver.
 
-The full device-tree file is available in [[root]/ioctl_driver/zx5-obru-uio.dts](../uio_driver/zx5-obru-ioctl.dts)
+The full device-tree file is available in [[root]/ioctl_driver/zx5-obru-ioctl.dts](../uio_driver/zx5-obru-ioctl.dts)
 
 ## 2. Compile Device Tree
 
