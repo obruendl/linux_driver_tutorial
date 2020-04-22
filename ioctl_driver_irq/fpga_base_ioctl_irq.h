@@ -19,5 +19,5 @@ typedef void (*callback_f)(void*);
 #define RD_FW_VERSION _IOR('a','c',uint32_t*)
 #define RD_DATE _IOR('a','d', date_t*)
 #define WAIT_IRQ _IOR('a', 'e', void*)
- 
+#define CLEAR_IRQCNT _IOR('a', 'f', void*)
 

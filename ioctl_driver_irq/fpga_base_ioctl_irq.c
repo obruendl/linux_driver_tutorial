@@ -25,6 +25,7 @@ typedef struct prvivate_s {
 	void* callbackArg;
 	int irq;
 	wait_queue_head_t irqWait;
+	int irqCnt;
 } private_t;
 
 //*************************************************************************
@@ -110,11 +111,14 @@ static long fpga_base_ioctl(struct file *file, unsigned int cmd, unsigned long a
 			}
 			break;
 		case WAIT_IRQ:
-			ret = wait_event_interruptible(priv->irqWait, true);
+			ret = wait_event_interruptible(priv->irqWait, priv->irqCnt > 0);
 			if (ret != 0) {
 				printk("Error from wait_event_interruptible in fpga_base\n");
 				return ret;
 			}
+			break;
+		case CLEAR_IRQCNT:
+			priv->irqCnt = 0;
 			break;
 		default:
 			break;
@@ -129,7 +133,7 @@ static irqreturn_t fpga_base_isr(int irq, void* arg)
 		printk("fpga_base received unknown IRQ %d\n", irq);
 		return IRQ_NONE;
 	}
-	printk("fpga_base received IRQ %d\n", irq);
+	priv->irqCnt++;
 	wake_up_interruptible(&priv->irqWait);
 	return IRQ_HANDLED;
 }
@@ -200,6 +204,7 @@ static int fpga_base_probe(struct platform_device *pdev)
 	//Get Interrupt resource from devicetree
 	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
 	priv->irq = res->start;
+	priv->irqCnt = 0;
 	printk("Registering IRQ %d in fpga_base\n", priv->irq);
 
 	//Register interrupt
