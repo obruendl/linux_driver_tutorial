@@ -6,7 +6,7 @@
 #include <sys/ioctl.h>
 
 //Include driver header
-#include "../../fpga_base_ioctl.h"
+#include "../../fpga_base_ioctl_irq.h"
 
 
 int main()
@@ -15,6 +15,7 @@ int main()
     int f;
     date_t date;
     uint32_t version;
+    int i;
 
     //Initial print
     printf("Hello World\n");
@@ -32,6 +33,17 @@ int main()
     ioctl(f, WR_SW_VERSION, 123);
     ioctl(f, RD_SW_VERSION, &version);
     printf("swversion=0x%d\n", version);
+
+    //Test IRQ
+    ioctl(f, CLEAR_IRQCNT, NULL); //First clear the counter to flush all IRQs detected before this line is executed
+    for (i=0; i<10; i++) {
+    	//Wait for next IRQ
+    	ioctl(f, WAIT_IRQ, NULL);
+
+    	//Print IRQ Info
+    	printf("Received IRQ\n");
+    }
+
 
     return 0;
 }

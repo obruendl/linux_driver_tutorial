@@ -127,6 +127,7 @@ static long fpga_base_ioctl(struct file *file, unsigned int cmd, unsigned long a
         return 0;
 }
 
+//Interrupt service routine
 static irqreturn_t fpga_base_isr(int irq, void* arg)
 {
 	private_t* priv = (private_t*)arg;
@@ -139,6 +140,8 @@ static irqreturn_t fpga_base_isr(int irq, void* arg)
 	//... Because IRQs only occur every second, it will work anyway
 	priv->irqCnt++;
 	wake_up_interruptible(&priv->irqWait);
+	
+	//IRQ_HANDLED leads to the IRQ being clearedi n the IRQ controller
 	return IRQ_HANDLED;
 }
  
