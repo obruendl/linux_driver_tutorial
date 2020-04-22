@@ -77,9 +77,6 @@ static long fpga_base_ioctl(struct file *file, unsigned int cmd, unsigned long a
 	private_t* priv;
 	date_t date;
 	
-	//Initial print for information
-	printk("fpga_base ioctl\n");
-	
 	//Get register pointer 
 	priv = to_private_t(file);
 	regs = (uint8_t*)priv->regs;
@@ -112,6 +109,10 @@ static long fpga_base_ioctl(struct file *file, unsigned int cmd, unsigned long a
 			break;
 		case WAIT_IRQ:
 			ret = wait_event_interruptible(priv->irqWait, priv->irqCnt > 0);
+			//I know, this is not thread-safe! ...
+			//... The example shall only show how to receive IRQs, it does not cover driver development in general.
+			//... Because IRQs only occur every second, it will work anyway
+			priv->irqCnt--; 
 			if (ret != 0) {
 				printk("Error from wait_event_interruptible in fpga_base\n");
 				return ret;
@@ -133,6 +134,9 @@ static irqreturn_t fpga_base_isr(int irq, void* arg)
 		printk("fpga_base received unknown IRQ %d\n", irq);
 		return IRQ_NONE;
 	}
+	//I know, this is not thread-safe! ...
+	//... The example shall only show how to receive IRQs, it does not cover driver development in general.
+	//... Because IRQs only occur every second, it will work anyway
 	priv->irqCnt++;
 	wake_up_interruptible(&priv->irqWait);
 	return IRQ_HANDLED;
