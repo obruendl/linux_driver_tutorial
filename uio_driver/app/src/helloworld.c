@@ -17,7 +17,7 @@ int main()
     //Open UIO device
     f = open("/dev/uio0", O_RDWR);
     if (f < 0) {
-    	printf("Failed to open\n");
+    	printf("Failed to open %d\n", (int)f);
     }
 
     //Map memory to user space
