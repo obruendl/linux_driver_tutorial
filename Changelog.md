@@ -1,3 +1,7 @@
+## 1.3.0
+
+* Added device tree overlays
+
 ## 1.2.0
 
 * Added ICTRL driver with IRQ
