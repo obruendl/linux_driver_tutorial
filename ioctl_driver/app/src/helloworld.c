@@ -11,7 +11,7 @@
 
 int main()
 {
-	//Declarations
+    //Declarations
     int f;
     date_t date;
     uint32_t version;
@@ -22,7 +22,7 @@ int main()
     //Open device
     f = open("/dev/fpga_base", O_RDWR);
     if (f < 0) {
-    	printf("Failed to open\n");
+        printf("Failed to open\n");
     }
     //Operrate driver using IOCTL
     ioctl(f, RD_FW_VERSION, &version);

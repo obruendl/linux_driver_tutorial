@@ -7,7 +7,7 @@
 
 int main()
 {
-	//Declaration
+    //Declaration
     int f;
     char* ptr;
 
@@ -17,13 +17,13 @@ int main()
     //Open UIO device
     f = open("/dev/uio0", O_RDWR);
     if (f < 0) {
-    	printf("Failed to open %d\n", (int)f);
+        printf("Failed to open %d\n", (int)f);
     }
 
     //Map memory to user space
     ptr = mmap(0, 0x1000, PROT_READ | PROT_WRITE, MAP_SHARED, f, 0);
     if (ptr == MAP_FAILED) {
-    	printf("Failed to map\n");
+        printf("Failed to map\n");
     }
 
     //Memory can now be accessed

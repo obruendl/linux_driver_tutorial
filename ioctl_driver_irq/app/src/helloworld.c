@@ -11,7 +11,7 @@
 
 int main()
 {
-	//Declarations
+    //Declarations
     int f;
     date_t date;
     uint32_t version;
@@ -23,7 +23,7 @@ int main()
     //Open device
     f = open("/dev/fpga_base", O_RDWR);
     if (f < 0) {
-    	printf("Failed to open\n");
+        printf("Failed to open\n");
     }
     //Operrate driver using IOCTL
     ioctl(f, RD_FW_VERSION, &version);
@@ -37,11 +37,11 @@ int main()
     //Test IRQ
     ioctl(f, CLEAR_IRQCNT, NULL); //First clear the counter to flush all IRQs detected before this line is executed
     for (i=0; i<10; i++) {
-    	//Wait for next IRQ
-    	ioctl(f, WAIT_IRQ, NULL);
+        //Wait for next IRQ
+        ioctl(f, WAIT_IRQ, NULL);
 
-    	//Print IRQ Info
-    	printf("Received IRQ\n");
+        //Print IRQ Info
+        printf("Received IRQ\n");
     }
 
 

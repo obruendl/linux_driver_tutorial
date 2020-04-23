@@ -10,7 +10,7 @@
 
 int main()
 {
-	//Declaration
+    //Declaration
     int f;
     char* ptr;
     int i;
@@ -21,13 +21,13 @@ int main()
     //Open UIO device
     f = open("/dev/uio0", O_RDWR);
     if (f < 0) {
-    	printf("Failed to open\n");
+        printf("Failed to open\n");
     }
 
     //Map memory to user space
     ptr = mmap(0, 0x1000, PROT_READ | PROT_WRITE, MAP_SHARED, f, 0);
     if (ptr == MAP_FAILED) {
-    	printf("Failed to map\n");
+        printf("Failed to map\n");
     }
 
     //Memory can now be accessed
@@ -43,24 +43,24 @@ int main()
 
     //Test IRQ
     for (i=0; i<10; i++) {
-    	uint32_t intInfo;
+        uint32_t intInfo;
 
-    	//Acknowledge IRQ
-    	if (write(f, &intInfo, sizeof(intInfo)) < 0) {
-    		printf("Failed to acknowledge IRQ: %s\n", strerror(errno));
-    		return -1;
-    	}
+        //Acknowledge IRQ
+        if (write(f, &intInfo, sizeof(intInfo)) < 0) {
+            printf("Failed to acknowledge IRQ: %s\n", strerror(errno));
+            return -1;
+        }
 
-    	//Wait for next IRQ
-    	if (read(f, &intInfo, sizeof(intInfo)) <0) {
-    		printf("Failed to wait for IRQ: %s\n", strerror(errno));
-    		return -1;
-    	}
-    	//... The read value is the number of IRQs that occurred.
-    	//... not that select() can be used as well.
+        //Wait for next IRQ
+        if (read(f, &intInfo, sizeof(intInfo)) <0) {
+            printf("Failed to wait for IRQ: %s\n", strerror(errno));
+            return -1;
+        }
+        //... The read value is the number of IRQs that occurred.
+        //... not that select() can be used as well.
 
-    	//Print IRQ Info
-    	printf("Received IRQ\n");
+        //Print IRQ Info
+        printf("Received IRQ\n");
     }
 
 

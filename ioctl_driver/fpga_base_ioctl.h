@@ -2,11 +2,11 @@
 
 //Struct used as parameter to one IOCTL call
 typedef struct date_s {
-	int year;
-	int month;
-	int day;
-	int hour;
-	int minute;
+    int year;
+    int month;
+    int day;
+    int hour;
+    int minute;
 } date_t;
 
 
