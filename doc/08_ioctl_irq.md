@@ -1,4 +1,4 @@
-[<< back](07_uio_irq.md) | [index](01_index.md) | [forward >> ](99_references.md)
+[<< back](07_uio_irq.md) | [index](01_index.md) | [forward >> ](09_overlays.md)
 
 # Interrupts for IOCTL Driver
 
@@ -211,4 +211,4 @@ In this chapter, a simple IOCTL based device driver using IRQs was built and ins
 
 Of course the IRQ handling within the driver is minimal for this simple example. However, it serves as a good starting point to write more complex drivers.
 
-[<< back](07_uio_irq.md) | [index](01_index.md) | [forward >> ](99_references.md)
+[<< back](07_uio_irq.md) | [index](01_index.md) | [forward >> ](09_overlays.md)
