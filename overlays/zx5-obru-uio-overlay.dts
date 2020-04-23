@@ -1,0 +1,39 @@
+/*
+ *  Copyright (C) 2011 - 2014 Xilinx
+ *  Copyright (C) 2012 National Instruments Corp.
+ *
+ * This software is licensed under the terms of the GNU General Public
+ * License version 2, as published by the Free Software Foundation, and
+ * may be copied, distributed, and modified under those terms.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+/dts-v1/;
+/plugin/; //Required for overlays
+
+/ {
+
+	compatible = "xlnx,zynq-7000"; 	//Use same value as in base device-tree
+	
+	fragment@0 {				//If there are multiple framents, start numbering at zero
+	
+		target = <&amba>;		//Our overlay will add instances to the main bus
+		__overlay__ {
+
+			#address-cells = <1>;		//Use same value as in base device-tree
+			#size-cells = <1>;		//Use same value as in base device-tree
+
+			uio_fpga_base@43C10000{		//this will occur at /amba/uio_fpga_base in th device tree
+				status = "okay";
+				compatible = "generic-uio";
+				reg = < 0x43C10000 0x1000 >;
+			};
+		};
+	};
+
+};
+
+
