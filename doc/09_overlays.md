@@ -91,7 +91,7 @@ Then we need to create a directory for our overlay (one directory per overlay is
 To install the overlay, we simply write the contents of the *.dtbo* file to the correct file in the config filesystem:
 
 <pre>
-   # cat /root/overlay/zx5-obru-uio-overlay.dtbo > /sys/kernel/config/device-tree/test/dtbo
+   # cat /root/overlay/zx5-obru-uio-overlay.dtbo > /sys/kernel/config/device-tree/overlays/test/dtbo
 </pre>
 
 The last three commands (from *mount* to *cat*) are also available as script in [[root]/overlays/install_overlay.sh](../overlays/install_overlay.sh).
